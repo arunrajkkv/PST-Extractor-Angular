@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+
+.hand-cursor {
+  cursor: pointer;
+}
+
+.table-height {
+  height: 750px;
+  overflow: auto;
+}
+
+.table-header {
+  position: sticky;
+  top: 0;
+}
+
+.border-round {
+  border: 1px solid;
+}
+
+.header-analysis-body {
+  height: 600px;
+  overflow: auto;
+}
+
+.header-analysis-card {
+  background: #cce1f4;
+}

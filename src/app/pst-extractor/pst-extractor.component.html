@@ -1,0 +1,127 @@
+<div class="px-5">
+    <div class="row">
+        <div class="col-3 border-round" *ngIf="isShowFolderView">
+            <div class="d-grid">
+                <span><strong class="font-x-large">Folder View</strong></span>
+            </div>
+            <ul class="list-group pt-3" *ngIf="extractedData.length > 0">
+                <li class="list-group-item hand-cursor" *ngFor="let data of extractedData"
+                    (click)="onClickFolder(data)">
+                    <span>{{data?.folder_name}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="" [ngClass]="extractedData.length > 0 ? 'col-9' : 'col-12'" *ngIf="!isShowContentData">
+            <div class="card text-center my-5">
+                <div class="card-header">
+                    Email Extractor and Header Analysis
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Email PST File Extractor</h5>
+                    <p class="card-text">This will extract input email pst file for forensic analysis using python
+                        server</p>
+                    <a href="#" class="btn btn-primary my-4" (click)="getData()">Extract PST File</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Extracted result will be shown below
+                </div>
+            </div>
+        </div>
+        <div class="col-9 table-height" *ngIf="isShowContentData">
+            <table class="table table-striped table-bordered" *ngIf="messageArray.length > 0">
+                <thead class="table-header">
+                    <tr>
+                        <th scope="col">Subject</th>
+                        <th scope="col">To</th>
+                        <th scope="col">From</th>
+                        <th scope="col">Sender Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let msg of messageArray">
+                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                            (click)="modalData = msg">
+                            {{msg.subject}}</td>
+                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                            (click)="modalData = msg">
+                            {{msg.to}}</td>
+                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                            (click)="modalData = msg">
+                            {{msg.sender_email}}</td>
+                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                            (click)="modalData = msg">
+                            {{msg.sender_name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Header Analysis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body header-analysis-body">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row px-2">
+                            <div class="card header-analysis-card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <label class="fw-bold">Creation Time :</label>
+                                            <span class="ps-2">{{convertToDateObject(headerData.creation_time)}}</span>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="fw-bold">Signature :</label>
+                                            <span class="ps-2">{{headerData.signature}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <label class="fw-bold">Delivery Time :</label>
+                                            <span class="ps-2">{{convertToDateObject(modalData.delivery_time)}}</span>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="fw-bold">File Format :</label>
+                                            <span class="ps-2">{{headerData.file_format}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <label class="fw-bold">Modification Time :</label>
+                                            <span
+                                                class="ps-2">{{convertToDateObject(headerData.modification_time)}}</span>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="fw-bold">Version :</label>
+                                            <span class="ps-2">{{headerData.version}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label class="fw-bold">Root Folder Id :</label>
+                                            <span class="ps-2">{{modalData.root_folder_id}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="fs-4 fw-bolder">Message Body :</label>
+                            <span class="ps-2">{{modalData.body}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

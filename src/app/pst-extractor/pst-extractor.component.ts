@@ -17,6 +17,7 @@ export class PstExtractorComponent implements OnInit {
     isShowFolderView = false;
     modalData: any = {};
     headerData: any = {};
+    fileName: string = '';
 
     constructor(private _commonService: CommonService) { }
 
@@ -24,7 +25,9 @@ export class PstExtractorComponent implements OnInit {
     }
 
     getData() {
-        this._commonService.getExtractedData()
+        let directoryPath = 'D:\\others\\pst files\\';
+        const FILE = directoryPath + this.fileName;
+        this._commonService.getExtractedData(FILE)
             .subscribe(
                 (response: any) => {
                     if (response) {
@@ -38,7 +41,6 @@ export class PstExtractorComponent implements OnInit {
                             });
                         }
                     }
-                    console.log('this.messageArray:', this.messageArray)
                 },
                 error => {
                     console.log(error)
@@ -49,10 +51,10 @@ export class PstExtractorComponent implements OnInit {
     onClickFolder(data: any): void {
         this.isShowContentData = true;
         this.headerData = data.header_data;
-        console.log('this.headerData:', this.headerData)
     }
 
-    onClickMessage(message: any): void {
+    onSelectPstFile(event: any) {
+        this.fileName = event ? event.srcElement.files[0].name : '';
     }
 
     convertToDateObject(dateString: string): any {

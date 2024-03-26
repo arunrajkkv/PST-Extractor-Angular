@@ -17,8 +17,8 @@ export class CommonService {
       return (document.getElementsByTagName('base')[0]).href;
   }
 
-  getExtractedData() {
-      return this._http.get(this.baseUrl + 'getExtractedData');
+  getExtractedData(file: string) {
+    return this._http.get<any>(`${this.baseUrl}getExtractedData?file=${file}`);
   }
 
   getPstHeader(filePath: string) {

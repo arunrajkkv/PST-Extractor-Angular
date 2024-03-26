@@ -20,6 +20,11 @@
                     <h5 class="card-title">Email PST File Extractor</h5>
                     <p class="card-text">This will extract input email pst file for forensic analysis using python
                         server</p>
+                    <div class="row"><div class="align-items-center col-12 d-flex justify-content-center ms-5 ps-5">
+                        <input type="file" id="pstFile" name="pstFile" accept=".pst"
+                        (change)="onSelectPstFile($event)" />
+                    </div>
+                    </div>
                     <a href="#" class="btn btn-primary my-4" (click)="getData()">Extract PST File</a>
                 </div>
                 <div class="card-footer text-muted">
@@ -32,8 +37,9 @@
                 <thead class="table-header">
                     <tr>
                         <th scope="col">Subject</th>
-                        <th scope="col">To</th>
                         <th scope="col">From</th>
+                        <th scope="col">To</th>
+                        <th scope="col">Cc</th>
                         <th scope="col">Sender Name</th>
                     </tr>
                 </thead>
@@ -44,10 +50,13 @@
                             {{msg.subject}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)="modalData = msg">
+                            {{msg.sender_email}}</td>
+                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                            (click)="modalData = msg">
                             {{msg.to}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)="modalData = msg">
-                            {{msg.sender_email}}</td>
+                            {{msg.cc}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)="modalData = msg">
                             {{msg.sender_name}}</td>
@@ -105,8 +114,16 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <label class="fw-bold">Root Folder Id :</label>
-                                            <span class="ps-2">{{modalData.root_folder_id}}</span>
+                                            <label class="fw-bold">Client Submit Time :</label>
+                                            <span class="ps-2">{{modalData.client_submit_time}}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="fw-bold">Sender Address Type :</label>
+                                            <span class="ps-2">{{modalData.sender_address_type}}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="fw-bold">Conversation Topic :</label>
+                                            <span class="ps-2">{{modalData.conversation_topic}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -114,7 +131,7 @@
                         </div>
                         <div class="row">
                             <label class="fs-4 fw-bolder">Message Body :</label>
-                            <span class="ps-2">{{modalData.body}}</span>
+                            <span class="ps-2" [innerHTML]="modalData.body"></span>
                         </div>
                     </div>
                 </div>

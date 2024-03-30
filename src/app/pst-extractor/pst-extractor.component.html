@@ -46,19 +46,19 @@
                 <tbody>
                     <tr *ngFor="let msg of messageArray">
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
-                            (click)="modalData = msg">
+                            (click)="modalData = msg; onClickTable(msg)">
                             {{msg.subject}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
-                            (click)="modalData = msg">
+                            (click)="modalData = msg;  onClickTable(msg)">
                             {{msg.sender_email}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
-                            (click)="modalData = msg">
+                            (click)="modalData = msg;  onClickTable(msg)">
                             {{msg.to}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
-                            (click)="modalData = msg">
+                            (click)="modalData = msg;  onClickTable(msg)">
                             {{msg.cc}}</td>
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
-                            (click)="modalData = msg">
+                            (click)="modalData = msg;  onClickTable(msg)">
                             {{msg.sender_name}}</td>
                     </tr>
                 </tbody>
@@ -124,6 +124,10 @@
                                         <div class="col-12">
                                             <label class="fw-bold">Conversation Topic :</label>
                                             <span class="ps-2">{{modalData.conversation_topic}}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="fw-bold">Images Used :</label>
+                                              <span *ngFor="let image of imagesArray" class="ps-2">{{image}}</span>
                                         </div>
                                     </div>
                                 </div>

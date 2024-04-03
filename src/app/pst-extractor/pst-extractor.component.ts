@@ -26,6 +26,9 @@ export class PstExtractorComponent implements OnInit {
     parsedHeaders: any = {};
     receivedList: any = [];
     searchWord: any;
+    isShowSignalView:boolean = false;
+    parsedHeaderStringArray: any = [];
+    currentTab: string = '';
 
     constructor(private _commonService: CommonService) { }
 
@@ -40,6 +43,8 @@ export class PstExtractorComponent implements OnInit {
                 (response: any) => {
                     if (response) {
                         this.extractedData = response;
+                        this.currentTab = this.extractedData[0].folder_name;
+                        this.onClickFolder(this.extractedData[0]);
                         this.isShowFolderView = true;
                     }
                 },
@@ -54,11 +59,13 @@ export class PstExtractorComponent implements OnInit {
     }
 
     public onClickFolder(data: any): void {
+        this.currentTab = '';
+        this.currentTab = data.folder_name;
         this.headerData = [];
         this.messageDeliveryData = [];
         this.headerData = data.header_data;
         this.messageDeliveryData = data.message_delivery_data;
-        if (data.contacts.length > 0) {
+        if (data.contacts && data.contacts.length > 0) {
             this.contactsArray = data.contacts;
         } else {
             this.contactsArray = [];
@@ -85,10 +92,12 @@ export class PstExtractorComponent implements OnInit {
     }
 
     public onClickTable(message: any, index: number) {
+        console.log('message:', message)
         this.imagesArray = [];
         this.messageDeliveryDataIndex = index;
         this.modalData = message;
         this.parseHeaders(this.messageDeliveryData[index].headers)
+        this.parsedHeaderStringArray = this.parseHeadersToMailSignalFormat(this.messageDeliveryData[index].headers);
         if (message && message.images.length > 0) {
             this.imagesArray = message.images;
         }
@@ -113,6 +122,16 @@ export class PstExtractorComponent implements OnInit {
             }
         });
         this.receivedList = this.parseReceivedString(this.parsedHeaders['Received']);
+    }
+
+    private parseHeadersToMailSignalFormat(headerString: string):any {
+        const HEADERS = headerString.split("\n\n");
+        let headerStringArray: any = [];
+        HEADERS.forEach(header => {
+            const FIELDS = header.split("\t");
+            FIELDS.forEach(field => { headerStringArray.push(field.trim()); });
+        });
+        return headerStringArray;
     }
 
     parseReceivedString(inputString: string) {
@@ -153,6 +172,20 @@ export class PstExtractorComponent implements OnInit {
             });
         } else {
             this.messageArray = this.tempMessageArray;
+        }
+    }
+
+    getDate(dateString: string): string {
+        if (dateString) {
+            let date = new Date(dateString);
+            let year = date.getFullYear();
+            let month: any = date.getMonth() + 1;
+            let day: any = date.getDate();
+            month = (month < 10) ? "0" + month : month;
+            day = (day < 10) ? "0" + day : day;
+            return year + "-" + month + "-" + day;
+        } else {
+            return '';
         }
     }
 }

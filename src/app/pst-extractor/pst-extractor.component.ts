@@ -26,9 +26,15 @@ export class PstExtractorComponent implements OnInit {
     parsedHeaders: any = {};
     receivedList: any = [];
     searchWord: any;
-    isShowSignalView:boolean = false;
+    isShowSignalView: boolean = false;
     parsedHeaderStringArray: any = [];
     currentTab: string = '';
+    serversList: any = [];
+    senderEmail: any;
+    recipientEmail: any;
+    authenticatedBits: any;
+    isAuthenticated: any;
+    encryptionStatus: any;
 
     constructor(private _commonService: CommonService) { }
 
@@ -88,19 +94,40 @@ export class PstExtractorComponent implements OnInit {
             const date = new Date();/* Create a new Date object with the milliseconds */
             date.setTime(milliseconds);
             return date;
+        } else {
+            return '--No data--';
         }
     }
 
     public onClickTable(message: any, index: number) {
-        console.log('message:', message)
         this.imagesArray = [];
         this.messageDeliveryDataIndex = index;
         this.modalData = message;
-        this.parseHeaders(this.messageDeliveryData[index].headers)
+        this.parseHeaders(this.messageDeliveryData[index].headers);
+        this.getParsedEmailHeader(this.modalData.message_delivery_data.headers)
         this.parsedHeaderStringArray = this.parseHeadersToMailSignalFormat(this.messageDeliveryData[index].headers);
+        this.serversList = this.getServersList(this.getParsedArrayListWithNewLine())
         if (message && message.images.length > 0) {
             this.imagesArray = message.images;
         }
+    }
+
+    private getParsedArrayListWithNewLine(): string {
+        return this.parsedHeaderStringArray.join('\n');
+    }
+
+    private getServersList(inputString: any): any {
+        const LINES = inputString.split('\n');
+        const SERVERS: any = [];
+        LINES.forEach((line: any) => {
+            const MATCH = line.match(/from\s(.*?)\s\((.*?)\)/);
+            if (MATCH) {
+                const SERVER_NAME = MATCH[1];
+                const IP_ADDRESS = MATCH[2];
+                SERVERS.push({ serverName: SERVER_NAME, ipAddress: IP_ADDRESS });
+            }
+        });
+        return SERVERS;
     }
 
     private parseHeaders(headersString: string): void {
@@ -124,7 +151,7 @@ export class PstExtractorComponent implements OnInit {
         this.receivedList = this.parseReceivedString(this.parsedHeaders['Received']);
     }
 
-    private parseHeadersToMailSignalFormat(headerString: string):any {
+    private parseHeadersToMailSignalFormat(headerString: string): any {
         const HEADERS = headerString.split("\n\n");
         let headerStringArray: any = [];
         HEADERS.forEach(header => {
@@ -175,17 +202,20 @@ export class PstExtractorComponent implements OnInit {
         }
     }
 
-    getDate(dateString: string): string {
-        if (dateString) {
-            let date = new Date(dateString);
-            let year = date.getFullYear();
-            let month: any = date.getMonth() + 1;
-            let day: any = date.getDate();
-            month = (month < 10) ? "0" + month : month;
-            day = (day < 10) ? "0" + day : day;
-            return year + "-" + month + "-" + day;
-        } else {
-            return '';
-        }
+    getDate(dateString: string): any {
+        return (dateString) ? new Date(dateString) : '';
+    }
+
+    getParsedEmailHeader(emailHeaders: any) {
+        const receivedHeaders = emailHeaders.match(/Received: (.*?)\n/g) || [];
+        const lastReceivedHeader = receivedHeaders.length > 0 ? receivedHeaders[receivedHeaders.length - 1] : '';
+        const senderRecipientMatch = lastReceivedHeader.match(/for <(.*?)>;.*by (.*?) \(/);
+        this.senderEmail = senderRecipientMatch ? senderRecipientMatch[1] : null;
+        this.recipientEmail = senderRecipientMatch ? senderRecipientMatch[2] : null;
+        const authenticatedMatch = lastReceivedHeader.match(/authenticated bits=(\d+)/);
+        this.authenticatedBits = authenticatedMatch ? parseInt(authenticatedMatch[1]) : 0;
+        this.isAuthenticated = this.authenticatedBits > 0;
+        const encryptionMatch = lastReceivedHeader.match(/(TLS|SSL)/);
+        this.encryptionStatus = encryptionMatch ? encryptionMatch[1] + ' ' + 'Encryption' : 'None';
     }
 }

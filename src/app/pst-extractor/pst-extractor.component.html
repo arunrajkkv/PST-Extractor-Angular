@@ -6,7 +6,7 @@
             </div>
             <ul class="list-group pt-3" *ngIf="extractedData.length > 0">
                 <li class="list-group-item hand-cursor folder-view-list" *ngFor="let data of extractedData"
-                    (click)="onClickFolder(data);"  [ngClass]="currentTab === data?.folder_name ? 'active-class' : ''">
+                    (click)="onClickFolder(data);" [ngClass]="currentTab === data?.folder_name ? 'active-class' : ''">
                     <span>{{data?.folder_name}}</span>
                 </li>
             </ul>
@@ -45,44 +45,38 @@
             <table class="table table-striped table-bordered" *ngIf="messageArray.length > 0;else noData">
                 <thead class="table-header">
                     <tr>
-                        <th scope="col">From</th>
-                        <th scope="col">To</th>
-                        <th scope="col" style="width: 8%">Sent Date</th>
-                        <th scope="col" style="width: 8%">Received Date</th>
-                        <th scope="col">Subject</th>
-                        <th scope="col">Attachments</th>
-                        <th scope="col">Size</th>
-                        <th scope="col">Cc</th>
-                        <th scope="col">Sender Name</th>
-                        <th scope="col">Message Preview</th>
+                        <th width="5%;" scope="col">From</th>
+                        <th width="5%;" scope="col">To</th>
+                        <th width="5%;" scope="col" style="width: 8%">Sent Date</th>
+                        <th width="5%;" scope="col" style="width: 8%">Received Date</th>
+                        <th width="5%;" scope="col">Subject</th>
+                        <th width="5%;" scope="col">Cc</th>
+                        <th width="5%;" scope="col">Sender Name</th>
+                        <th width="5%;" scope="col">Message Preview</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let msg of messageArray; let index=index">
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                        <td width="5%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)=" onClickTable(msg, index)">
                             {{msg.sender_email}}</td>
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                        <td width="5%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)=" onClickTable(msg, index)">
                             {{msg.to}}</td>
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                        <td width="8%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)=" onClickTable(msg, index)">
-                            {{getDate(msg.client_submit_time)}}</td>
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                            {{getDate(msg.client_submit_time)}}
+                        </td>
+                        <td width="8%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)=" onClickTable(msg, index)">
                             {{getDate(msg.delivery_time)}}</td>
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                        <td width="5%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)="onClickTable(msg, index)">
                             {{msg.subject}}</td>
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
-                            (click)="onClickTable(msg, index)">
-                            <span *ngFor="let image of imagesArray" class="ps-2">{{image}}</span>
-                        </td>
-                        <td></td>
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                        <td width="5%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)=" onClickTable(msg, index)">
                             {{msg.cc}}</td>
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
+                        <td width="5%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)=" onClickTable(msg, index)">
                             {{msg.sender_name}}</td>
                         <td>{{msg.preview_text}}<span>...</span></td>
@@ -119,8 +113,6 @@
                 </tbody>
             </table>
         </div>
-
-
     </div>
 </div>
 
@@ -130,137 +122,215 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Detailed Header Analysis</h5>
-                <div><button type="button" class="btn btn-info ms-5" (click)="isShowSignalView=true">Show signal view</button></div>
-                <div><button type="button" class="btn btn-info ms-5" (click)="isShowSignalView=false">Show Content view</button></div>
+                <div>
+                    <button type="button" class="btn btn-outline-success ms-5"
+                        title="Click to view extracted contents separately" (click)="isShowSignalView=false"
+                        [ngClass]="!isShowSignalView ? 'active' : ''">Content view</button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-outline-success ms-5"
+                        title="Click to view extracted contents in paragraph form" (click)="isShowSignalView=true"
+                        [ngClass]="isShowSignalView ? 'active' : ''">Signal view</button>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body header-analysis-body">
-                <div class="card">
-                    <div class="card-body" *ngIf="!isShowSignalView">
+                <div>
+                    <div *ngIf="!isShowSignalView">
                         <div class="row px-2">
                             <div class="card header-analysis-card">
+                                <div class="card-header">
+                                    <div class="col-12">
+                                        <label class="fw-bold">Message ID :</label>
+                                        <span class="ps-2">{{parsedHeaders['Message-Id']}}</span>
+                                    </div>
+                                </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-12">
-                                            <label class="fw-bold">Message ID :</label>
-                                            <span class="ps-2">{{parsedHeaders['Message-Id']}}</span>
+                                        <div class="card from-to-card mt-2">
+                                            <div class="card-body">
+                                                <div class="col-12">
+                                                    <label class="fw-bold">From:</label>
+                                                    <span class="ps-2">{{modalData.sender_email ? modalData.sender_email
+                                                        : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">To:</label>
+                                                    <span class="ps-2">{{recipientEmail ? recipientEmail : '--No
+                                                        data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Cc:</label>
+                                                    <span class="ps-2">{{modalData.cc ? modalData.cc : '--No
+                                                        data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Bcc:</label>
+                                                    <span class="ps-2">{{modalData.bcc ? modalData.bcc : '--No
+                                                        data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Subject:</label>
+                                                    <span class="ps-2">{{modalData?.message_delivery_data?.subject ?
+                                                        modalData?.message_delivery_data?.subject : '--No
+                                                        data--'}}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- <div class="col-12">
-                                            <label class="fw-bold">Creation Time :</label>
-                                            <span class="ps-2">{{convertToDateObject(headerData.creation_time)}}</span>
-                                        </div> -->
-                                        <div class="col-12">
-                                            <label class="fw-bold">Signature :</label>
-                                            <span class="ps-2">{{headerData.signature}}</span>
+                                        <div class="card ip-domain-card mt-2">
+                                            <div class="card-body">
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Sent date and time :</label>
+                                                    <span class="ps-2">{{modalData.client_submit_time ?
+                                                        modalData.client_submit_time : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Received date and time:</label>
+                                                    <span class="ps-2">{{receivedList[0]?.dateAndTime ?
+                                                        receivedList[0]?.dateAndTime : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Sender IP:</label>
+                                                    <span class="ps-2">{{receivedList[0]?.senderIP ?
+                                                        receivedList[0]?.senderIP : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Sender Domain:</label>
+                                                    <span class="ps-2">{{receivedList[0]?.senderDomain ?
+                                                        receivedList[0]?.senderDomain : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Receiver Desktop:</label>
+                                                    <span class="ps-2">{{modalData.receiver_ip_address ?
+                                                        modalData.receiver_ip_address : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Receiver Server:</label>
+                                                    <span class="ps-2">{{receivedList[0]?.receivingServer ?
+                                                        receivedList[0]?.receivingServer : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Receiver Domain:</label>
+                                                    <span class="ps-2">{{receivedList[0]?.receiverDomain ?
+                                                        receivedList[0]?.receiverDomain : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Sender Address Type :</label>
+                                                    <span class="ps-2">{{modalData.sender_address_type ?
+                                                        modalData.sender_address_type : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Sender SMTP Address:</label>
+                                                    <span class="ps-2">{{modalData.sender_smtp_address ?
+                                                        modalData.sender_smtp_address : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Encryption Type:</label>
+                                                    <span class="ps-2">{{encryptionStatus ? encryptionStatus : '--No
+                                                        data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Authenticated bits:</label>
+                                                    <span class="ps-2">{{authenticatedBits}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Authentication Status:</label>
+                                                    <span class="ps-2">{{isAuthenticated}}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!--   -->
-                                        <div class="col-12">
-                                            <label class="fw-bold">File Format :</label>
-                                            <span class="ps-2">{{headerData.file_format}}</span>
+                                        <div class="col-12 px-0 mt-2">
+                                            <div class="card signature-card">
+                                                <div class="card-body">
+                                                    <label class="fw-bold">Servers involved =></label>
+                                                    <div class="ms-4" *ngFor="let server of serversList">
+                                                        <label class="fw-bold">Server Name:</label><span
+                                                            class="ms-2">{{server.serverName ? server.serverName :
+                                                            '--No data--'}}</span>
+                                                        <label class="fw-bold ms-3">IP Address:</label><span
+                                                            class="ms-2">{{server.ipAddress ? server.ipAddress
+                                                            : '--No data--'}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Modification Time :</label>
-                                            <span
-                                                class="ps-2">{{convertToDateObject(headerData.modification_time)}}</span>
+                                        <div class="card server-card mt-2">
+                                            <div class="card-body">
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Signature :</label>
+                                                    <span class="ps-2">{{headerData.signature ? headerData.signature :
+                                                        '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">File Format :</label>
+                                                    <span class="ps-2">{{headerData.file_format ? headerData.file_format
+                                                        : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Modification Time :</label>
+                                                    <span
+                                                        class="ps-2">{{convertToDateObject(headerData.modification_time)}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Version :</label>
+                                                    <span class="ps-2">{{headerData.version ? headerData.version : '--No
+                                                        data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">EmailClient Name:</label>
+                                                    <span class="ps-2">{{modalData.sender_name ? modalData.sender_name :
+                                                        '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Conversation Topic :</label>
+                                                    <span class="ps-2">{{modalData.conversation_topic ?
+                                                        modalData.conversation_topic : '--No data--'}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="fw-bold">ESMTP ID:</label>
+                                                    <span class="ps-2">{{receivedList[0]?.id ? receivedList[0]?.id :
+                                                        receivedList[0]?.id}}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Version :</label>
-                                            <span class="ps-2">{{headerData.version}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Sender Name:</label>
-                                            <span class="ps-2">{{modalData.sender_name}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Sender Email:</label>
-                                            <span class="ps-2">{{modalData.sender_email}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Sender Address Type :</label>
-                                            <span class="ps-2">{{modalData.sender_address_type}}</span>
-                                        </div>
-                                        <!-- <div class="col-12">
-                                            <label class="fw-bold">Sender IP Address:</label>
-                                            <span class="ps-2">{{modalData.sender_ip_address}}</span>
-                                        </div> -->
-                                        <div class="col-12">
-                                            <label class="fw-bold">Sender SMTP Address:</label>
-                                            <span class="ps-2">{{modalData.sender_smtp_address}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Sent Time/Client Submit Time :</label>
-                                            <span class="ps-2">{{modalData.client_submit_time}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Received Time:</label>
-                                            <span class="ps-2">{{receivedList[0]?.dateAndTime}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Conversation Topic :</label>
-                                            <span class="ps-2">{{modalData.conversation_topic}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Receiver Desktop:</label>
-                                            <span class="ps-2">{{modalData.receiver_ip_address}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Receiver Name:</label>
-                                            <span class="ps-2">{{modalData.to}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">ESMTP ID:</label>
-                                            <span class="ps-2">{{receivedList[0]?.id}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Sender Domain:</label>
-                                            <span class="ps-2">{{receivedList[0]?.senderDomain}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Sender IP:</label>
-                                            <span class="ps-2">{{receivedList[0]?.senderIP}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Receiver Domain:</label>
-                                            <span class="ps-2">{{receivedList[0]?.receiverDomain}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Receiver Server:</label>
-                                            <span class="ps-2">{{receivedList[0]?.receivingServer}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Date:</label>
-                                            <span class="ps-2">{{receivedList[0]?.date}}</span>
-                                        </div>
-                                        <!-- <div class="col-12">
-                                            <label class="fw-bold">Received Time:</label>
-                                            <span class="ps-2">{{receivedList[0]?.dateAndTime}}</span>
-                                        </div> -->
-                                        <div class="col-12">
-                                            <label class="fw-bold">Day:</label>
-                                            <span class="ps-2">{{receivedList[0]?.timestamp}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Time and TimeZone:</label>
-                                            <span class="ps-2">{{receivedList[0]?.timeAndTimeZone}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="fw-bold">Images Used :</label>
-                                            <span *ngFor="let image of imagesArray" class="ps-2">{{image}}</span>
+                                        <div class="card img-attach-card mt-2">
+                                            <div class="card-body">
+                                                <div class="col-12">
+                                                    <label class="fw-bold">Images/Attachments:</label>
+                                                    <div *ngIf="imagesArray.length > 0;else noImages">
+                                                        <span *ngFor="let image of imagesArray"
+                                                            class="ps-2">{{image}}</span>
+                                                    </div>
+                                                    <ng-template #noImages>
+                                                        <span class="ps-2">{{'--No data--'}}</span>
+                                                    </ng-template>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <label class="fs-4 fw-bolder">Message Body :</label>
-                            <span class="ps-2" [innerHTML]="modalData.body"></span>
+                        <div class="mt-2">
+                            <div class="card message-body-card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <label class="fs-4 fw-bolder">Message Body :</label>
+                                        <span class="ps-2" [innerHTML]="modalData.body"></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body" *ngIf="isShowSignalView">
-                        <div class="row" *ngIf="parsedHeaderStringArray.length > 0">
-                            <div *ngFor="let signal of parsedHeaderStringArray;let index=index">
-                                <div>
-                                    <span>{{signal}}</span>
+                        <div class="row mx-0" *ngIf="parsedHeaderStringArray.length > 0">
+                            <div class="card signal-view-card">
+                                <div class="card-body px-0">
+                                    <div *ngFor="let signal of parsedHeaderStringArray;let index=index">
+                                        <div>
+                                            <span>{{signal}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

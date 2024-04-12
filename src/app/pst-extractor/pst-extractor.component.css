@@ -1,0 +1,33 @@
+.active-class {
+  background-color: #1e847b;
+  color: #fff;
+}
+
+.from-to-card {
+  background-color: #f8f8f8;
+}
+
+.ip-domain-card {
+  background-color: #e8eaf2;
+}
+
+.signature-card {
+  background-color: #f6fbff;
+}
+
+.server-card {
+  background-color: #f1f6f4;
+}
+
+.message-body-card {
+  background-color: #dcdcee;
+}
+
+.img-attach-card {
+  background-color: #acacac54;
+}
+
+.signal-view-card {
+  background-color: black;
+  color: #fff;
+}

@@ -65,11 +65,12 @@
                             {{msg.to}}</td>
                         <td width="8%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)=" onClickTable(msg, index)">
-                            {{getDate(msg.client_submit_time)}}
+                            {{getSentReceivedTimes('sentTime', msg?.message_delivery_data?.headers)}}
                         </td>
                         <td width="8%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)=" onClickTable(msg, index)">
-                            {{getDate(msg.delivery_time)}}</td>
+                            {{getSentReceivedTimes('ReceivedTime', msg?.message_delivery_data?.headers)}}
+                        </td>
                         <td width="5%;" data-bs-toggle="modal" data-bs-target="#exampleModal" class="hand-cursor"
                             (click)="onClickTable(msg, index)">
                             {{msg.subject}}</td>

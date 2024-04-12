@@ -11,7 +11,6 @@ export class PstExtractorComponent implements OnInit {
     @ViewChild('exampleModal') exampleModal: any;
 
     extractedData: any = [];
-    clickedData: any;
     messageArray: any = [];
     tempMessageArray: any = [];
     isShowContentData = false;
@@ -22,7 +21,6 @@ export class PstExtractorComponent implements OnInit {
     imagesArray: any = [];
     contactsArray: any = [];
     messageDeliveryData: any = [];
-    messageDeliveryDataIndex: number = -1;
     parsedHeaders: any = {};
     receivedList: any = [];
     searchWord: any;
@@ -88,20 +86,19 @@ export class PstExtractorComponent implements OnInit {
 
     public convertToDateObject(dateString: string): any {
         if (dateString) {
-            const uint8Array = new TextEncoder().encode(dateString);/* Convert the string to a Uint8Array */
-            const timestamp = new DataView(uint8Array.buffer).getUint32(0, true);/* Extract the timestamp from the Uint8Array */
-            const milliseconds = timestamp * 1000;/* Convert the timestamp to milliseconds */
-            const date = new Date();/* Create a new Date object with the milliseconds */
-            date.setTime(milliseconds);
-            return date;
+            const UNIT_8_ARRAY = new TextEncoder().encode(dateString);/* Convert the string to a Uint8Array */
+            const TIMESTAMP = new DataView(UNIT_8_ARRAY.buffer).getUint32(0, true);/* Extract the timestamp from the Uint8Array */
+            const milliseconds = TIMESTAMP * 1000;/* Convert the timestamp to milliseconds */
+            const DATE = new Date();/* Create a new Date object with the milliseconds */
+            DATE.setTime(milliseconds);
+            return DATE;
         } else {
             return '--No data--';
         }
     }
 
-    public onClickTable(message: any, index: number) {
+    public onClickTable(message: any, index: number): void {
         this.imagesArray = [];
-        this.messageDeliveryDataIndex = index;
         this.modalData = message;
         this.parseHeaders(this.messageDeliveryData[index].headers);
         this.getParsedEmailHeader(this.modalData.message_delivery_data.headers)
@@ -161,7 +158,7 @@ export class PstExtractorComponent implements OnInit {
         return headerStringArray;
     }
 
-    parseReceivedString(inputString: string) {
+    private parseReceivedString(inputString: string): any {
         let headers = inputString.split("\n");
         let parsedHeaders: any = [];
         headers.forEach(header => {
@@ -187,7 +184,7 @@ export class PstExtractorComponent implements OnInit {
         return parsedHeaders;
     }
 
-    onChangeSearch(): any {
+    public onChangeSearch(): any {
         if (this.searchWord) {
             this.messageArray = this.tempMessageArray.filter((item: any) => {
                 for (let key in item) {
@@ -202,11 +199,15 @@ export class PstExtractorComponent implements OnInit {
         }
     }
 
-    getDate(dateString: string): any {
-        return (dateString) ? new Date(dateString) : '';
+    public getSentReceivedTimes(timeType: string, header: string): any {
+        const TIME_REGEX = /(\d{1,2} \w{3} \d{4} \d{2}:\d{2}:\d{2})/g;
+        const TIME_DATA = header.match(TIME_REGEX);
+        if (TIME_DATA && TIME_DATA.length >= 2) {
+           return timeType === 'sentTime' ? new Date(TIME_DATA[0]) : new Date(TIME_DATA[1]);
+        }
     }
 
-    getParsedEmailHeader(emailHeaders: any) {
+    private getParsedEmailHeader(emailHeaders: any): void {
         const receivedHeaders = emailHeaders.match(/Received: (.*?)\n/g) || [];
         const lastReceivedHeader = receivedHeaders.length > 0 ? receivedHeaders[receivedHeaders.length - 1] : '';
         const senderRecipientMatch = lastReceivedHeader.match(/for <(.*?)>;.*by (.*?) \(/);

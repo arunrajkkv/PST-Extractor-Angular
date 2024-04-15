@@ -33,6 +33,12 @@ export class PstExtractorComponent implements OnInit {
     authenticatedBits: any;
     isAuthenticated: any;
     encryptionStatus: any;
+    isShowWhoIsView: boolean = false;
+    whoIsLookUpData: any = {
+        senderDomainData: [], receiverDomainData: []
+    };
+    currentWhoIsTab: string = 'SENDER_TAB';
+    dataReady: boolean = true;
 
     constructor(private _commonService: CommonService) { }
 
@@ -40,6 +46,7 @@ export class PstExtractorComponent implements OnInit {
     }
 
     public getData(): void {
+        this.dataReady = false;
         if (this.fileName) {
             let directoryPath = 'D:\\others\\pst files\\';
             const FILE = directoryPath + this.fileName;
@@ -50,16 +57,17 @@ export class PstExtractorComponent implements OnInit {
                         this.currentTab = this.extractedData[0].folder_name;
                         this.onClickFolder(this.extractedData[0]);
                         this.isShowFolderView = true;
+                        this.dataReady = true;
                     }
                 },
                 error => {
                     console.log(error)
                     this.isShowFolderView = false;
+                    this.dataReady = true;
                 });
         } else {
             alert('Please choose a valid pst file');
         }
-
     }
 
     public onClickFolder(data: any): void {
@@ -203,20 +211,60 @@ export class PstExtractorComponent implements OnInit {
         const TIME_REGEX = /(\d{1,2} \w{3} \d{4} \d{2}:\d{2}:\d{2})/g;
         const TIME_DATA = header.match(TIME_REGEX);
         if (TIME_DATA && TIME_DATA.length >= 2) {
-           return timeType === 'sentTime' ? new Date(TIME_DATA[0]) : new Date(TIME_DATA[1]);
+            return timeType === 'sentTime' ? new Date(TIME_DATA[0]) : new Date(TIME_DATA[1]);
         }
     }
 
     private getParsedEmailHeader(emailHeaders: any): void {
-        const receivedHeaders = emailHeaders.match(/Received: (.*?)\n/g) || [];
-        const lastReceivedHeader = receivedHeaders.length > 0 ? receivedHeaders[receivedHeaders.length - 1] : '';
-        const senderRecipientMatch = lastReceivedHeader.match(/for <(.*?)>;.*by (.*?) \(/);
-        this.senderEmail = senderRecipientMatch ? senderRecipientMatch[1] : null;
-        this.recipientEmail = senderRecipientMatch ? senderRecipientMatch[2] : null;
-        const authenticatedMatch = lastReceivedHeader.match(/authenticated bits=(\d+)/);
-        this.authenticatedBits = authenticatedMatch ? parseInt(authenticatedMatch[1]) : 0;
+        const RECEIVED_HEADERS = emailHeaders.match(/Received: (.*?)\n/g) || [];
+        const LAST_RECEIVED_HEADER = RECEIVED_HEADERS.length > 0 ? RECEIVED_HEADERS[RECEIVED_HEADERS.length - 1] : '';
+        const SENDER_RECIPIENT_MATCH = LAST_RECEIVED_HEADER.match(/for <(.*?)>;.*by (.*?) \(/);
+        this.senderEmail = SENDER_RECIPIENT_MATCH ? SENDER_RECIPIENT_MATCH[1] : null;
+        this.recipientEmail = SENDER_RECIPIENT_MATCH ? SENDER_RECIPIENT_MATCH[2] : null;
+        const AUTHENTICATED_MATCH = LAST_RECEIVED_HEADER.match(/authenticated bits=(\d+)/);
+        this.authenticatedBits = AUTHENTICATED_MATCH ? parseInt(AUTHENTICATED_MATCH[1]) : 0;
         this.isAuthenticated = this.authenticatedBits > 0;
-        const encryptionMatch = lastReceivedHeader.match(/(TLS|SSL)/);
-        this.encryptionStatus = encryptionMatch ? encryptionMatch[1] + ' ' + 'Encryption' : 'None';
+        const ENCRYPTION_MATCH = LAST_RECEIVED_HEADER.match(/(TLS|SSL)/);
+        this.encryptionStatus = ENCRYPTION_MATCH ? ENCRYPTION_MATCH[1] + ' ' + 'Encryption' : 'None';
+    }
+
+    public onClickWhoIsLookUpView(): void {
+        this.isShowSignalView = false;
+        this.isShowWhoIsView = true;
+        this.getWhoIsData('SENDER');
+    }
+
+    public getWhoIsData(dataType: string): void {
+        dataType === 'SENDER' ? this.getWhoIsForSenderDomain() : this.getWhoIsForReceiverDomain();
+    }
+
+    private getWhoIsForSenderDomain(): void {
+        this.dataReady = false;
+        this._commonService.getWhoIsLookUpData(this.receivedList[0].senderDomain).subscribe(
+            (response: any) => {
+                if (response) {
+                    this.whoIsLookUpData.senderDomainData.push(response);
+                    this.dataReady = true;
+                }
+            },
+            (error: any) => {
+                console.log(error)
+                this.dataReady = true;
+            });
+    }
+
+    private getWhoIsForReceiverDomain(): void {
+        this.dataReady = false;
+        this._commonService.getWhoIsLookUpData(this.receivedList[0].receiverDomain).subscribe(
+            (response: any) => {
+                if (response) {
+                    this.whoIsLookUpData.receiverDomainData.push(response);
+                    this.dataReady = true;
+                }
+            },
+            (error: any) => {
+                console.log(error)
+                this.dataReady = true;
+            });
     }
 }

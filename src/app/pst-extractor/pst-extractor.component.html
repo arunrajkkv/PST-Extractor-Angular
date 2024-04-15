@@ -1,3 +1,4 @@
+<div *ngIf="!dataReady" class="loading">Loading&#8230;</div>
 <div class="px-5">
     <div class="row">
         <div class="col-3 border-round" *ngIf="isShowFolderView">
@@ -125,19 +126,25 @@
                 <h5 class="modal-title" id="exampleModalLabel">Detailed Header Analysis</h5>
                 <div>
                     <button type="button" class="btn btn-outline-success ms-5"
-                        title="Click to view extracted contents separately" (click)="isShowSignalView=false"
+                        title="Click to view extracted contents separately"
+                        (click)="isShowSignalView=false;isShowWhoIsView=false"
                         [ngClass]="!isShowSignalView ? 'active' : ''">Content view</button>
                 </div>
                 <div>
                     <button type="button" class="btn btn-outline-success ms-5"
-                        title="Click to view extracted contents in paragraph form" (click)="isShowSignalView=true"
+                        title="Click to view extracted contents in paragraph form"
+                        (click)="isShowSignalView=true;isShowWhoIsView=false"
                         [ngClass]="isShowSignalView ? 'active' : ''">Signal view</button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-outline-info ms-5" title="Click to view whois lookup details"
+                        (click)="onClickWhoIsLookUpView();">WHOIS</button>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body header-analysis-body">
                 <div>
-                    <div *ngIf="!isShowSignalView">
+                    <div *ngIf="!isShowSignalView && !isShowWhoIsView">
                         <div class="row px-2">
                             <div class="card header-analysis-card">
                                 <div class="card-header">
@@ -323,13 +330,314 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body" *ngIf="isShowSignalView">
+                    <div class="card-body" *ngIf="isShowSignalView && !isShowWhoIsView">
                         <div class="row mx-0" *ngIf="parsedHeaderStringArray.length > 0">
                             <div class="card signal-view-card">
                                 <div class="card-body px-0">
                                     <div *ngFor="let signal of parsedHeaderStringArray;let index=index">
                                         <div>
                                             <span>{{signal}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="isShowWhoIsView">
+                        <div class="card whois-view-container">
+                            <div class="row">
+                                <div class="col-3">
+                                    <ul class="list-group pt-3 ms-2" *ngIf="extractedData.length > 0">
+                                        <li class="list-group-item hand-cursor folder-view-list"
+                                            (click)="currentWhoIsTab='SENDER_TAB';getWhoIsData('SENDER')"
+                                            [ngClass]="currentWhoIsTab === 'SENDER_TAB' ? 'active-class' : ''">
+                                            <span>WHOIS(Sender Domain)</span>
+                                        </li>
+                                        <li class="list-group-item hand-cursor folder-view-list"
+                                            (click)="currentWhoIsTab='RECEIVER_TAB';getWhoIsData('RECEIVER')"
+                                            [ngClass]="currentWhoIsTab === 'RECEIVER_TAB' ? 'active-class' : ''">
+                                            <span>WHOIS(Receiver Domain)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-9">
+                                    <div *ngIf="currentWhoIsTab === 'SENDER_TAB'" class="pt-2">
+                                        <span class="fs-2 fw-normal">Sender Domain Details</span>
+                                        <div class="card me-2">
+                                            <div class="card-header">
+                                                <span>Domain Information</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <ng-container class="ps-2 pt-2">
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Domain Name:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.domain_name
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.domain_name : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Registrar:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.registrar
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.registrar : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Registrar URL:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.registrar_url
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.registrar_url : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Registered On:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.creation_date
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.creation_date : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Expires On:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.expiration_date
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.expiration_date :
+                                                            '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Updated On:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.updated_date
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.updated_date : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Status:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.status
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.status : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Name Servers:</label>
+                                                        <div
+                                                            *ngIf="whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.name_servers.length > 0">
+                                                            <span class="ps-2 badge bg-secondary ms-2 mt-2"
+                                                                *ngFor="let server of whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.name_servers">
+                                                                {{server}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <div class="card me-2 mt-2">
+                                            <div class="card-header">
+                                                <span>Registrant Contact</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <ng-container class="ps-2 pt-2">
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Organization:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.organization
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.organization : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Registrar URL:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.registrar_url
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.registrar_url : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">State:</label>
+                                                        <span class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.state
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.state : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Country:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.country
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.country : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Email:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.emails
+                                                            ?
+                                                            whoIsLookUpData?.senderDomainData[0]?.parsedWhoIs?.emails : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <div class="card me-2 mt-2">
+                                            <div class="card-header">
+                                                <span>Raw Whois Data</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <ng-container class="ps-2 pt-2">
+                                                    <div class="row">
+                                                        <ng-container *ngFor="let line of whoIsLookUpData?.senderDomainData[0]?.rawWhoIs.split('\r\n')">
+                                                            <span class="ps-2">{{ line }}</span><br>
+                                                        </ng-container>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="currentWhoIsTab === 'RECEIVER_TAB'" class="pt-2">
+                                        <span class="fs-2 fw-normal">Receiver Domain Details</span>
+                                        <div class="card me-2">
+                                            <div class="card-header">
+                                                <span>Domain Information</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <ng-container class="ps-2 pt-2">
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Domain Name:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.domain_name
+                                                            ?
+                                                            whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.domain_name : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Registrar:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.registrar
+                                                            ?
+                                                            whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.registrar : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Registrar URL:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.registrar_url
+                                                            ?
+                                                            whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.registrar_url :
+                                                            '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Registered On:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.creation_date
+                                                            ?
+                                                            whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.creation_date :
+                                                            '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Expires On:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.expiration_date
+                                                            ?
+                                                            whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.expiration_date :
+                                                            '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Updated On:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.updated_date
+                                                            ?
+                                                            whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.updated_date : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Status:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.status
+                                                            ?
+                                                            whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.status : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Name Servers:</label>
+                                                        <div
+                                                            *ngIf="whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.name_servers.length > 0">
+                                                            <span class="ps-2 badge bg-secondary ms-2 mt-2"
+                                                                *ngFor="let server of whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.name_servers">
+                                                                {{server}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <div class="card me-2 mt-2">
+                                            <div class="card-header">
+                                                <span>Registrant Contact</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <ng-container class="ps-2 pt-2">
+                                                    <div class="col-12">
+                                                        <label class="fw-bold">Organization:</label>
+                                                        <span
+                                                            class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.organization
+                                                            ?
+                                                            whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.organization : '--No
+                                                            data--'}}</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="col-12">
+                                                            <label class="fw-bold">State:</label>
+                                                            <span
+                                                                class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.state
+                                                                ?
+                                                                whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.state : '--No
+                                                                data--'}}</span>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="fw-bold">Country:</label>
+                                                            <span
+                                                                class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.country
+                                                                ?
+                                                                whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.country : '--No
+                                                                data--'}}</span>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="fw-bold">Email:</label>
+                                                            <span
+                                                                class="ps-2">{{whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.emails
+                                                                ?
+                                                                whoIsLookUpData?.receiverDomainData[0]?.parsedWhoIs?.emails : '--No
+                                                                data--'}}</span>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <div class="card me-2 mt-2">
+                                            <div class="card-header">
+                                                <span>Raw Whois Data</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <ng-container class="ps-2 pt-2">
+                                                    <div class="row">
+                                                        <ng-container *ngFor="let line of whoIsLookUpData?.receiverDomainData[0]?.rawWhoIs.split('\r\n')">
+                                                            <span class="ps-2">{{ line }}</span><br>
+                                                        </ng-container>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

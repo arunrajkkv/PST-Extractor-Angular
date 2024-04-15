@@ -31,3 +31,9 @@
   background-color: black;
   color: #fff;
 }
+
+.whois-view-container {
+  height: 593px;
+  border: 1px solid;
+  overflow: auto;
+}

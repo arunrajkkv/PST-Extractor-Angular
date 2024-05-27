@@ -13,8 +13,6 @@ export class PstExtractorComponent implements OnInit {
     extractedData: any = [];
     messageArray: any = [];
     tempMessageArray: any = [];
-    isShowContentData = false;
-    isShowFolderView = false;
     modalData: any = {};
     headerData: any = {};
     fileName: string = '';
@@ -24,7 +22,6 @@ export class PstExtractorComponent implements OnInit {
     parsedHeaders: any = {};
     receivedList: any = [];
     searchWord: any;
-    isShowSignalView: boolean = false;
     parsedHeaderStringArray: any = [];
     currentTab: string = '';
     serversList: any = [];
@@ -33,12 +30,16 @@ export class PstExtractorComponent implements OnInit {
     authenticatedBits: any;
     isAuthenticated: any;
     encryptionStatus: any;
-    isShowWhoIsView: boolean = false;
     whoIsLookUpData: any = {
         senderDomainData: [], receiverDomainData: []
     };
     currentWhoIsTab: string = 'SENDER_TAB';
     dataReady: boolean = true;
+    isShowContentData = false;
+    isShowFolderView = false;
+    isShowSignalView: boolean = false;
+    isShowContentView: boolean = false;
+    isShowWhoIsView: boolean = false;
 
     constructor(private _commonService: CommonService) { }
 
@@ -106,6 +107,7 @@ export class PstExtractorComponent implements OnInit {
     }
 
     public onClickTable(message: any, index: number): void {
+        this.setBooleanForViews(true, false, false);
         this.imagesArray = [];
         this.modalData = message;
         this.parseHeaders(this.messageDeliveryData[index].headers);
@@ -185,7 +187,6 @@ export class PstExtractorComponent implements OnInit {
                     dateAndTime: TIMESTAMP_MATCHES[0],
                     date: TIMESTAMP_MATCHES[1],
                     timeAndTimeZone: TIMESTAMP_MATCHES[2]
-
                 });
             }
         });
@@ -229,8 +230,6 @@ export class PstExtractorComponent implements OnInit {
     }
 
     public onClickWhoIsLookUpView(): void {
-        this.isShowSignalView = false;
-        this.isShowWhoIsView = true;
         this.getWhoIsData('SENDER');
     }
 
@@ -266,5 +265,11 @@ export class PstExtractorComponent implements OnInit {
                 console.log(error)
                 this.dataReady = true;
             });
+    }
+
+    public setBooleanForViews(content: boolean, signal: boolean, whoIs: boolean) {
+        this.isShowContentView = content;
+        this.isShowSignalView = signal;
+        this.isShowWhoIsView = whoIs;
     }
 }

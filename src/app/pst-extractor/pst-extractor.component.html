@@ -127,18 +127,19 @@
                 <div>
                     <button type="button" class="btn btn-outline-success ms-5"
                         title="Click to view extracted contents separately"
-                        (click)="isShowSignalView=false;isShowWhoIsView=false"
-                        [ngClass]="!isShowSignalView ? 'active' : ''">Content view</button>
+                        (click)="setBooleanForViews(true, false, false)"
+                        [ngClass]="!isShowSignalView && !isShowWhoIsView ? 'active' : ''">Content view</button>
                 </div>
                 <div>
                     <button type="button" class="btn btn-outline-success ms-5"
                         title="Click to view extracted contents in paragraph form"
-                        (click)="isShowSignalView=true;isShowWhoIsView=false"
-                        [ngClass]="isShowSignalView ? 'active' : ''">Signal view</button>
+                        (click)="setBooleanForViews(false, true, false)"
+                        [ngClass]="!isShowWhoIsView && !isShowContentView ? 'active' : ''">Signal view</button>
                 </div>
                 <div>
                     <button type="button" class="btn btn-outline-info ms-5" title="Click to view whois lookup details"
-                        (click)="onClickWhoIsLookUpView();">WHOIS</button>
+                        (click)="onClickWhoIsLookUpView();setBooleanForViews(false, false, true)"
+                        [ngClass]="!isShowSignalView && !isShowContentView ? 'active' : ''">WHOIS</button>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

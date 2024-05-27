@@ -9,11 +9,13 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonService } from './services/common.service';
+import { PstExtractorTestComponent } from './pst-extractor-test/pst-extractor-test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PstExtractorComponent
+    PstExtractorComponent,
+    PstExtractorTestComponent
    ],
   imports: [
     BrowserModule,

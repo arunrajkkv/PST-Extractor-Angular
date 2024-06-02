@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -21,18 +22,18 @@ export class CommonService {
         return this._http.get<any>(`${this.baseUrl}getExtractedData?file=${file}`);
     }
 
-    getPstHeader(filePath: string) {
-        return this._http.post(this.baseUrl + 'getPstHeader', { 'filePath': filePath });
-    }
-
-    getPstHeader1(filePath: string) {
-        const encodedFilePath = encodeURIComponent(filePath);
-        const url = `${this.baseUrl}getPstHeader?file_path=${encodedFilePath}`;
-        return this._http.get(url);
-    }
-
     getWhoIsLookUpData(domainName: string): any {
         return this._http.get<any>(`${this.baseUrl}whoIs?domain=${domainName}`);
+    }
+
+    getNSLookUpData(domainName: string): any {
+        return this._http.get<any>(`${this.baseUrl}nslookup?domain=${domainName}`);
+    }
+
+    exportToPDF(extractedData: any): Observable<Blob> {
+      return this._http.post(`${this.baseUrl}generate/report`, extractedData, {
+        responseType: 'blob',
+      });
     }
 
 }

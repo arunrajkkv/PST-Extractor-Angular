@@ -11,5 +11,21 @@
   "/whoIs": {
     "target": "http://localhost:5000",
     "secure": false
+  },
+  "/nslookup": {
+    "target": "http://localhost:5000",
+    "secure": false
+  },
+  "/downloadDocument": {
+    "target": "http://localhost:5000",
+    "secure": false
+  },
+  "/export/pdf": {
+    "target": "http://localhost:5000",
+    "secure": false
+  },
+  "/generate/report": {
+    "target": "http://localhost:5000",
+    "secure": false
   }
 }

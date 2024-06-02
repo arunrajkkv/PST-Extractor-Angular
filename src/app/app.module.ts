@@ -10,22 +10,24 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonService } from './services/common.service';
 import { PstExtractorTestComponent } from './pst-extractor-test/pst-extractor-test.component';
+import { ReportDataService } from './services/report-data.service';
+import { UtilityService } from './services/utility.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PstExtractorComponent,
-    PstExtractorTestComponent
+    declarations: [
+        AppComponent,
+        PstExtractorComponent,
+        PstExtractorTestComponent
    ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    RouterModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    MatIconModule
-  ],
-  providers: [CommonService],
-  bootstrap: [AppComponent]
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        RouterModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatIconModule
+    ],
+    providers: [CommonService, ReportDataService, UtilityService],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

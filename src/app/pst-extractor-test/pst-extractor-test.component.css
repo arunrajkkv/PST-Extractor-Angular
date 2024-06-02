@@ -1,45 +1,75 @@
 .active-class {
-  background-color: #1e847b;
-  color: #fff;
+    background-color: #1e847b;
+    color: #fff;
 }
 
 .from-to-card {
-  background-color: #f8f8f8;
+    background-color: #f8f8f8;
 }
 
 .ip-domain-card {
-  background-color: #e8eaf2;
+    background-color: #e8eaf2;
 }
 
 .signature-card {
-  background-color: #f6fbff;
+    background-color: #f6fbff;
 }
 
 .server-card {
-  background-color: #f1f6f4;
+    background-color: #f1f6f4;
 }
 
 .message-body-card {
-  background-color: #dcdcee;
+    background-color: #dcdcee;
 }
 
 .img-attach-card {
-  background-color: #acacac54;
+    background-color: #acacac54;
 }
 
 .signal-view-card {
-  background-color: black;
-  color: #fff;
+    background-color: black;
+    color: #fff;
 }
 
 .whois-view-container {
-  border: 1px solid;
-  overflow: auto;
+    border: 1px solid;
+    overflow: auto;
 }
 
 .extract-button {
-  height: 48px;
+    height: 48px;
 }
+
 .server-name-label {
-  color: greenyellow;
+    color: greenyellow;
+}
+
+.tab-select-style {
+    background-color: #0d6efd !important;
+    color: #fff !important;
+}
+
+.spf-font-color {
+    color: #28a428;
+}
+
+.a-record-card {
+    background-color: #d5f3df;
+}
+
+.txt-record-card {
+    background-color: #c1d9c1;
+}
+
+.inner-card {
+    background-color: #e9e8e8;
+}
+
+.ownership-card {
+    background-color: #f8f2e0;
+}
+
+.spf-record-card {
+    background-color: aliceblue;
 }

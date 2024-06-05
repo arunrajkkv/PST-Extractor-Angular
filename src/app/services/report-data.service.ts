@@ -17,7 +17,6 @@ export class ReportDataService {
             "Cc": reportRO.modalData.cc,
             "Bcc": reportRO.modalData.bcc,
             "Conversation Topic": reportRO.modalData.conversation_topic,
-            "Message Body": reportRO.modalData.body,
             "Folders List": this.getFoldersList(reportRO.extractedData),
             "Preview Text": reportRO.modalData.preview_text,
             "servers involved": this.getServersList(reportRO.serversList),

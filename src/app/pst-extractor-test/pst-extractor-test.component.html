@@ -21,6 +21,37 @@
                 </li>
             </ul>
         </div>
+        <!-- <div class="col-3 border-round" *ngIf="isShowFolderView">
+            <div class="d-grid">
+                <span><strong class="font-x-large">Folder View</strong></span>
+            </div>
+            <ul class="list-group pt-3" *ngIf="extractedData.length > 0">
+                <li class="list-group-item hand-cursor folder-view-list" *ngFor="let data of extractedData"
+                    (click)="onClickFolder(data);" [ngClass]="currentTab === data?.folder_name ? 'active-class' : ''">
+                    <span>{{data?.folder_name}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="" [ngClass]="extractedData.length > 0 ? 'col-9' : 'col-12'" *ngIf="!isShowContentData">
+            <div class="card text-center my-5">
+                <div class="card-header">
+                    Email Extractor and Header Analysis
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Email PST File Extractor</h5>
+                    <div class="row">
+                        <div class="align-items-center col-12 d-flex justify-content-center ms-5 ps-5">
+                            <input type="file" id="pstFile" name="pstFile" accept=".pst"
+                                (change)="onSelectPstFile($event)" />
+                        </div>
+                    </div>
+                    <a href="#" class="btn btn-primary my-4" (click)="getData()">Extract PST File</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Extracted result will be shown below
+                </div>
+            </div>
+        </div> -->
         <div class="col-9 mb-3">
             <div class="table-height" *ngIf="isShowContentData && contactsArray.length == 0">
                 <div class="input-group mb-3">

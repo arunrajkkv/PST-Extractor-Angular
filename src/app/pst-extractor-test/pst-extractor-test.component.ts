@@ -275,6 +275,9 @@ export class PstExtractorTestComponent implements OnInit {
         this.reportRO.receivedList = this.receivedList;
         this.reportRO.encryptionStatus = this.encryptionStatus;
         this.reportRO.whoIsLookUpData = this.whoIsLookUpData.senderDomainData[0].parsedWhoIs;
+        this.reportRO.nsLookupData = this.nsLookupData;
+        this.reportRO.verificationRecords = this.verificationRecords;
+        this.reportRO.spfRecords = this.spfRecords;
     }
 
     exportToPDF() {
